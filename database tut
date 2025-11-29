@@ -1,0 +1,68 @@
+1️⃣ Create Database
+CREATE DATABASE IF NOT EXISTS laundry_system;
+USE laundry_system;
+
+2️⃣ Create users table
+CREATE TABLE IF NOT EXISTS users (
+    id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    pin_hash VARCHAR(255) NOT NULL,
+    role ENUM('admin','cashier') NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+3️⃣ Create prices table
+CREATE TABLE IF NOT EXISTS prices (
+    id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    service_type VARCHAR(50) NOT NULL UNIQUE,
+    price_per_load DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+4️⃣ Create transactions table
+CREATE TABLE IF NOT EXISTS transactions (
+    id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    customer_name VARCHAR(100) NOT NULL,
+    customer_phone VARCHAR(20) NOT NULL,
+    service_type VARCHAR(100) NOT NULL,
+    weight DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+    price DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+    status ENUM('Pending','Paid','Completed') NOT NULL DEFAULT 'Pending',
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+5️⃣ Optional: Insert default services
+INSERT INTO prices (service_type, price_per_load) VALUES
+('Wash', 50.00),
+('Dry', 30.00),
+('Fold', 20.00);
+
+✅ Notes
+
+You can now add an admin user manually via PHPMyAdmin or a script, using a hashed password:
+
+ Creating the Admin Account
+Option 1: Manual via SQL (quick)
+INSERT INTO users (username, pin_hash, role) VALUES
+('admin', '<hashed_value>', 'admin');
+
+
+Replace <hashed_value> with the output of password_hash('1234', PASSWORD_DEFAULT) in PHP.
+
+Example in PHP:
+
+<?php
+require 'Database.php';
+
+$db = new Database();
+$plain_pin = '1234';
+$pin_hash = password_hash($plain_pin, PASSWORD_DEFAULT);
+
+$stmt = $db->pdo->prepare("INSERT INTO users (username, pin_hash, role) VALUES (?,?,?)");
+$stmt->execute(['admin', $pin_hash, 'admin']);
+
+echo "Admin user created.";
+?>
+
+
+Run this once, then delete the script for security.
