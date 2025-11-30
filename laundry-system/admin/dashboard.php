@@ -76,7 +76,9 @@ tr:nth-child(even){background:#f2f2f2;}
             <?php foreach($prices as $service => $data): ?>
             <div class="price-row">
                 <span class="service-name"><?php echo $service; ?>:</span>
+                <?php echo"Price:"?>
                 <input type="number" name="price[<?php echo $service; ?>]" value="<?php echo $data['price']; ?>" step="0.01" placeholder="Price">
+                <?php echo"Kilo per Load:"?>
                 <input type="number" name="kg_per_load[<?php echo $service; ?>]" value="<?php echo $data['kg_per_load']; ?>" step="0.1" placeholder="Kg/Load">
             </div>
             <?php endforeach; ?>
@@ -103,3 +105,4 @@ tr:nth-child(even){background:#f2f2f2;}
 
 </body>
 </html>
+
